@@ -33,7 +33,8 @@ def clean_input(text):
 
 
 def preprocess_input(text):
-    tokens = nltk.word_tokenize(text)
+    sentences = nltk.sent_tokenize(text)
+    tokens = [nltk.word_tokenize(sentence) for sentence in sentences]
     return tokens
 
 
@@ -46,10 +47,15 @@ def compute_average_word_length(tokens):
     return sum(word_lengths) / len(word_lengths)
 
 
-def compute_unique_words_fraction(tokens):
-    unique_words = len(set([word for word in tokens]))
-    total_words = len([word for word in tokens])
-    return unique_words / total_words
+def compute_total_average_word_length(sentence_list):
+    lengths = [compute_average_word_length(tokens) for tokens in sentence_list]
+    return sum(lengths) / len(lengths)
+
+
+def compute_total_unique_words_fraction(sentence_list):
+    all_words = [word for word_list in sentence_list for word in word_list]
+    unique_words = set(all_words)
+    return len(unique_words) / len(all_words)
 
 
 def count_word_usage(tokens, word_list):
@@ -69,35 +75,45 @@ def count_sentence_syllables(tokens):
     return sum([count_word_syllables(word) for word in tokens if word not in punctuation])
 
 
-def get_sentence_lenth(sentence_tokens):
+def count_total_syllables(sentence_list):
+    return sum([count_sentence_syllables(sentence) for sentence in sentence_list])
+
+
+def count_words_per_sentence(sentence_tokens):
     punctuation = ".,!?/"
     return len([word for word in sentence_tokens if word not in punctuation])
 
 
-def compute_sentence_length(text):
-    # TODO split sentences
-    pass
+def count_total_words(sentence_list):
+    return sum([count_words_per_sentence(sentence) for sentence in sentence_list])
 
 
-def get_suggestions(tokens):
-    told_said_usage = count_word_usage(tokens, ['told', 'said'])
-    but_and_usage = count_word_usage(tokens, ['but', 'and'])
-    wh_adverbs = count_word_usage(tokens, ['when', 'where', 'why', 'whence', 'whereby', 'wherein', 'whereupon'])
-    average_word_length = compute_average_word_length(tokens)
-    unique_words_fraction = compute_unique_words_fraction(tokens)
+def get_suggestions(sentence_list):
+    told_said_usage = sum([count_word_usage(tokens, ['told', 'said']) for tokens in sentence_list])
+    but_and_usage = sum([count_word_usage(tokens, ['but', 'and']) for tokens in sentence_list])
+    wh_adverbs_usage = sum(
+        [count_word_usage(tokens, ['when', 'where', 'why', 'whence', 'whereby', 'wherein', 'whereupon']) for tokens in
+         sentence_list])
+    logger.info(
+        "Adverb usage: %s told/said, %s but/and, %s wh adverbs" % (told_said_usage, but_and_usage, wh_adverbs_usage))
+    average_word_length = compute_total_average_word_length(sentence_list)
+    unique_words_fraction = compute_total_unique_words_fraction(sentence_list)
 
-    # TODO add sentences logic
-    syllables = count_sentence_syllables(tokens)
-    sentence_length = get_sentence_lenth(tokens)
-    flesch_score = compute_flesch_reading_ease(syllables, sentence_length, 1)
-    logger.info("Adverb usage: %s told/said, %s but/and, %s wh adverbs" % (told_said_usage, but_and_usage, wh_adverbs))
     logger.info(
         "Average word length %.2f, fraction of unique words %.2f" % (average_word_length, unique_words_fraction))
-    logger.info("%d syllables, %.2f flesch score" % (syllables, flesch_score))
+
+    number_of_syllables = count_total_syllables(sentence_list)
+    number_of_words = count_total_words(sentence_list)
+    number_of_sentences = len(sentence_list)
+    logger.info(
+        "%d syllables, %d words, %d sentences" % (number_of_syllables, number_of_words, number_of_sentences))
+
+    flesch_score = compute_flesch_reading_ease(number_of_syllables, number_of_words, number_of_sentences)
+    logger.info("%d syllables, %.2f flesch score" % (number_of_syllables, flesch_score))
 
 
 if __name__ == '__main__':
     input_text = parse_arguments()
     processed = clean_input(input_text)
-    tokenized = preprocess_input(processed)
-    suggestions = get_suggestions(tokenized)
+    tokenized_sentences = preprocess_input(processed)
+    suggestions = get_suggestions(tokenized_sentences)
