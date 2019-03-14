@@ -4,6 +4,7 @@ import sys
 
 import pyphen
 import nltk
+from termcolor import colored
 
 pyphen.language_fallback('en_US')
 
@@ -61,6 +62,28 @@ def compute_flesch_reading_ease(total_syllables, total_words, total_sentences):
     :return: A readability score: the lower the score, the more complex the text is deemed to be
     """
     return 206.85 - 1.015 * (total_words / total_sentences) - 84.6 * (total_syllables / total_words)
+
+
+def get_reading_level_from_flesch(flesch_score):
+    """
+    Correspondance taken from https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
+    :param flesch_score:
+    :return: A reading level and difficulty for a given flesch score
+    """
+    if flesch_score < 30:
+        return "Very difficult to read"
+    elif flesch_score < 50:
+        return "Difficult to read"
+    elif flesch_score < 60:
+        return "Fairly difficult to read"
+    elif flesch_score < 70:
+        return "Plain English"
+    elif flesch_score < 80:
+        return "Fairly easy to read"
+    elif flesch_score < 90:
+        return "Easy to read"
+    else:
+        return "Very easy to read"
 
 
 def compute_average_word_length(tokens):
@@ -180,11 +203,27 @@ def get_suggestions(sentence_list):
         "%d syllables, %d words, %d sentences" % (number_of_syllables, number_of_words, number_of_sentences))
 
     flesch_score = compute_flesch_reading_ease(number_of_syllables, number_of_words, number_of_sentences)
-    logger.info("%d syllables, %.2f flesch score" % (number_of_syllables, flesch_score))
+    logger.info("%d syllables, %.2f flesch score: %s" % (
+        number_of_syllables, flesch_score, get_reading_level_from_flesch(flesch_score)))
 
+
+def display_recommendations(sentence_list):
+    print(colored('hello', 'red'), 'dddd')
+    but_and = [token for token in sentence_list if token in ['but', 'and']]
+    out = []
+    for sentence in sentence_list:
+        for token in sentence:
+            word_color = token
+            if token in ['but', 'and']:
+                word_color = colored(word_color, 'red')
+            out.append(word_color)
+    print(" ".join(out))
+    # print(sentence_list)
+    # print(but_and)
 
 if __name__ == '__main__':
     input_text = parse_arguments()
     processed = clean_input(input_text)
     tokenized_sentences = preprocess_input(processed)
-    suggestions = get_suggestions(tokenized_sentences)
+    # suggestions = get_suggestions(tokenized_sentences)
+    suggestions = display_recommendations(tokenized_sentences)
