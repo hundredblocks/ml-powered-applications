@@ -3,56 +3,48 @@ import json
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from ml_editor import preprocess_input
 
 
-def parse_doc_to_text(path):
+def parse_posts_to_dataframe(path):
+    """
+
+    :param path: path to the xml document containing posts
+    :return: a dataframe of processed text
+    """
+
+    # Use python's standard library to parse XML file
     doc = ElT.parse(path)
     root = doc.getroot()
 
+    # Each row is a question
     all_rows = [row.attrib for row in root.findall('row')]
 
+    # Using tdqm to display progress since preprocessing takes time
     for item in tqdm(all_rows):
+        # Decode text from HTML
         soup = BeautifulSoup(item["Body"], features="html.parser")
         item["Text"] = soup.get_text()
+
+        # Tokenize text using our preprocessing function
         item["Tokenized"] = preprocess_input(item["Text"])
-    return all_rows
+        num_words = len([word for sent in item["Tokenized"] for word in sent])
+        item["question_len"] = num_words
+
+    # Create dataframe from our list of dictionaries
+    df = pd.DataFrame.from_dict(all_rows)
+    return df
 
 
 load_existing = True
-
 if not load_existing:
-    all_data = parse_doc_to_text('data/datascience.stackexchange.com/Posts.xml')
-    with open('data/extracted.json', mode='w') as f:
-        json.dump(all_data, f)
+    all_data = parse_posts_to_dataframe(
+        'data/datascience.stackexchange.com/Posts.xml')
+    all_data.to_csv('data/extracted.csv')
 else:
-    with open('data/extracted.json', mode='r') as f:
-        all_data = json.load(f)
+    all_data = pd.DataFrame.from_csv('data/extracted.csv')
 
-sentence_len = [len([word for sent in item["Tokenized"] for word in sent]) for
-                item in all_data]
-
-fig = plt.figure()
-fig.suptitle('Distribution of question length for sentences')
-plt.xlabel('Words per question')
-plt.ylabel('Number of questions')
-plt.hist(sentence_len, bins=1000, log=False)
-
-sentence_len_truncated = [a for a in sentence_len if a < 2000]
-print(len(sentence_len))
-print(len(sentence_len_truncated))
-fig = plt.figure()
-fig.suptitle(
-    'Distribution of question length for sentences shorter than 2000 words')
-plt.xlabel('Words per question')
-plt.ylabel('Number of questions')
-plt.hist(sentence_len_truncated, bins=200, log=False)
-# plt.show()
-
-
-all_data_df = pd.DataFrame.from_dict(all_data)
-all_data_df['PostTypeId'] = all_data_df['PostTypeId'].astype(int)
-print(all_data_df[all_data_df['PostTypeId'] == 1].describe())
+all_data['PostTypeId'] = all_data['PostTypeId'].astype(int)
+print(all_data[all_data['PostTypeId'] == 1].describe())
