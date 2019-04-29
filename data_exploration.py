@@ -1,4 +1,5 @@
 import json
+import os
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -38,13 +39,15 @@ def parse_posts_to_dataframe(path):
     return df
 
 
-load_existing = True
-if not load_existing:
-    all_data = parse_posts_to_dataframe(
-        'data/datascience.stackexchange.com/Posts.xml')
-    all_data.to_csv('data/extracted.csv')
-else:
-    all_data = pd.DataFrame.from_csv('data/extracted.csv')
+original_path = 'data/writers.stackexchange.com/Posts.xml'
+extracted_path = 'data/writers.csv'
 
-all_data['PostTypeId'] = all_data['PostTypeId'].astype(int)
-print(all_data[all_data['PostTypeId'] == 1].describe())
+load_existing = True
+
+if not (load_existing and os.path.isfile(extracted_path)):
+    all_data = parse_posts_to_dataframe(
+        original_path)
+    all_data.to_csv(extracted_path)
+else:
+    all_data = pd.DataFrame.from_csv(extracted_path)
+
