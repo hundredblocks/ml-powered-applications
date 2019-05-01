@@ -1,0 +1,14 @@
+numpy
+scikit-learn
+pandas
+spacy
+tensorflow
+keras
+umap-learn
+beautifulsoup4
+tqdm
+matplotlib
+Pillow
+bokeh
+pyphen
+nltk
