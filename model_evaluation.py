@@ -1,22 +1,19 @@
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_curve, auc
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def get_confusion_matrix_plot(predicted_y, true_y,
-                              classes=None,
-                              normalize=False,
-                              title='Confusion matrix',
-                              cmap=plt.cm.winter):
+def get_confusion_matrix_plot(predicted_y, true_y, classes=None, normalize=False,
+                              title='Confusion matrix', cmap=plt.cm.winter):
     """
-    Inspired by scikit-learn example
+    Inspired by sklearn example
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
-    :param predicted_y:
-    :param true_y:
-    :param classes:
-    :param normalize:
-    :param title:
-    :param cmap:
+    :param predicted_y: model's predicted values
+    :param true_y:  true value of the labels
+    :param classes: names of both classes
+    :param normalize: should we normalize the plot
+    :param title: plot title
+    :param cmap: colormap to use
     :return: plot for the confusion matrix
     """
     if classes is None:
@@ -43,4 +40,21 @@ def get_confusion_matrix_plot(predicted_y, true_y,
     plt.ylabel('True label', fontsize=30)
     plt.xlabel('Predicted label', fontsize=30)
 
+    return plt
+
+
+def get_roc_plot(predicted_proba_y, true_y):
+    """
+    Inspired by sklearn example
+    https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc_crossval.html
+    :param predicted_proba_y: the predicted probabilities of our model for each example
+    :param true_y: the true value of the label
+    :return:
+    """
+    fpr, tpr, thresholds = roc_curve(true_y, predicted_proba_y)
+    roc_auc = auc(fpr, tpr)
+    plt.plot(fpr, tpr, lw=1, alpha=0.3,
+             label='ROC curve (AUC = %0.2f)' % roc_auc)
+    plt.plot([0, 1], [0, 1], linestyle='--', lw=2, color='r',
+             label='Chance', alpha=.8)
     return plt
