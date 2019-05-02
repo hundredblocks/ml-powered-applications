@@ -12,3 +12,4 @@ Pillow
 bokeh
 pyphen
 nltk
+pytest
