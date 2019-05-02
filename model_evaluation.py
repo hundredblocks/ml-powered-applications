@@ -1,5 +1,7 @@
 from sklearn.calibration import calibration_curve
-from sklearn.metrics import confusion_matrix, roc_curve, auc, brier_score_loss
+from sklearn.metrics import confusion_matrix, roc_curve, auc, brier_score_loss, \
+    accuracy_score, f1_score, precision_score, \
+    recall_score
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -99,3 +101,25 @@ def get_calibration_plot(predicted_proba_y, true_y):
 
     plt.tight_layout()
     return plt
+
+
+def get_metrics(predicted_y, true_y):
+    """
+    Get standard metrics for binary classification
+    :param predicted_y: model's predicted values
+    :param true_y:  true value of the labels
+    :return:
+    """
+    # true positives / (true positives+false positives)
+    precision = precision_score(true_y, predicted_y, pos_label=None,
+                                average='weighted')
+    # true positives / (true positives + false negatives)
+    recall = recall_score(true_y, predicted_y, pos_label=None,
+                          average='weighted')
+
+    # harmonic mean of precision and recall
+    f1 = f1_score(true_y, predicted_y, pos_label=None, average='weighted')
+
+    # true positives + true negatives/ total
+    accuracy = accuracy_score(true_y, predicted_y)
+    return accuracy, precision, recall, f1
