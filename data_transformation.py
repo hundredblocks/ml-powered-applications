@@ -28,30 +28,29 @@ def parse_xml_to_csv(path):
     for item in tqdm(all_rows):
         # Decode text from HTML
         soup = BeautifulSoup(item["Body"], features="html.parser")
-        item["Text"] = soup.get_text()
+        item["body_text"] = soup.get_text()
 
         # Tokenize text using our preprocessing function
-        item["Tokenized"] = preprocess_input(item["Text"])
-        num_words = len([word for sent in item["Tokenized"] for word in sent])
-        item["question_len"] = num_words
-
+        item["tokenized"] = preprocess_input(item["body_text"])
+        num_words = len([word for sent in item["tokenized"] for word in sent])
+        item["text_len"] = num_words
     # Create dataframe from our list of dictionaries
     df = pd.DataFrame.from_dict(all_rows)
     return df
 
 
-def get_data_from_dump(site_name):
+def get_data_from_dump(site_name, load_existing=True):
     """
     load .xml dump, parse it to a csv, serialize it and return it
+    :param load_existing: should we load the existing extract or regenerate it
     :param site_name: name of the stackexchange website
     :return: pandas DataFrame of the parsed xml
     """
-    data_path = Path('/data')
+    data_path = Path('data')
     dump_name = "%s.stackexchange.com/Posts.xml" % site_name
     extracted_name = "%s.csv" % site_name
     dump_path = data_path / dump_name
     extracted_path = data_path / extracted_name
-    load_existing = True
 
     if not (load_existing and os.path.isfile(extracted_path)):
         all_data = parse_xml_to_csv(
