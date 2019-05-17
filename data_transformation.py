@@ -22,7 +22,7 @@ def parse_xml_to_csv(path):
     root = doc.getroot()
 
     # Each row is a question
-    all_rows = [row.attrib for row in root.findall('row')]
+    all_rows = [row.attrib for row in root.findall("row")]
 
     # Using tdqm to display progress since preprocessing takes time
     for item in tqdm(all_rows):
@@ -46,15 +46,14 @@ def get_data_from_dump(site_name, load_existing=True):
     :param site_name: name of the stackexchange website
     :return: pandas DataFrame of the parsed xml
     """
-    data_path = Path('data')
+    data_path = Path("data")
     dump_name = "%s.stackexchange.com/Posts.xml" % site_name
     extracted_name = "%s.csv" % site_name
     dump_path = data_path / dump_name
     extracted_path = data_path / extracted_name
 
     if not (load_existing and os.path.isfile(extracted_path)):
-        all_data = parse_xml_to_csv(
-            dump_path)
+        all_data = parse_xml_to_csv(dump_path)
         all_data.to_csv(extracted_path)
     else:
         all_data = pd.DataFrame.from_csv(extracted_path)
@@ -73,8 +72,9 @@ def get_random_train_test_split(posts, test_size=0.3, random_state=40):
     train_test_split(posts, test_size=test_size, random_state=random_state)
 
 
-def get_split_by_author(posts, author_id_column='OwnerUserId', test_size=0.3,
-                        random_state=40):
+def get_split_by_author(
+    posts, author_id_column="OwnerUserId", test_size=0.3, random_state=40
+):
     """
     Get train/test split
     Guarantee every author only appears in one of the splits
@@ -86,9 +86,13 @@ def get_split_by_author(posts, author_id_column='OwnerUserId', test_size=0.3,
     raise ValueError("Not yet implemented")
 
 
-def get_split_by_author_and_time(posts, author_id_column='OwnerUserId',
-                                 posted_column='CreationDate', test_size=0.3,
-                                 random_state=40):
+def get_split_by_author_and_time(
+    posts,
+    author_id_column="OwnerUserId",
+    posted_column="CreationDate",
+    test_size=0.3,
+    random_state=40,
+):
     """
     Get train/test split,
     Guarantee every author only appears in one of the splits
