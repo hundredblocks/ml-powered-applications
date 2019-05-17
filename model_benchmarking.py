@@ -38,7 +38,9 @@ class Count(BenchmarkedModel):
     def __init__(self):
         super().__init__()
         self.vectorizer = CountVectorizer()
-        self.clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")
+        self.clf = RandomForestClassifier(
+            n_estimators=100, class_weight="balanced"
+        )
 
     def fit(self, data, labels):
         self.clf.fit(self.vectorizer.fit_transform(data), labels)
@@ -50,7 +52,9 @@ class Count(BenchmarkedModel):
 class GloVe(BenchmarkedModel):
     def __init__(self):
         super().__init__()
-        self.clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")
+        self.clf = RandomForestClassifier(
+            n_estimators=100, class_weight="balanced"
+        )
         self.vectorizer = spacy.load(
             "en_core_web_lg", disable=["parser", "tagger", "ner", "textcat"]
         )
@@ -117,8 +121,16 @@ from __main__ import benchmark_inference, counts, glove, lstm, text_input, label
     # We run inference multiple times on each model and take the fastest run
     # This helps reduce the impact of slowdowns due to other processes
     print("Timing count vectors (ms)")
-    print(min(timeit.Timer("benchmark_inference(counts)", setup=setup).repeat(7, 1)))
+    print(
+        min(
+            timeit.Timer("benchmark_inference(counts)", setup=setup).repeat(7, 1)
+        )
+    )
     print("Timing GloVe vectors (ms)")
-    print(min(timeit.Timer("benchmark_inference(glove)", setup=setup).repeat(7, 1)))
+    print(
+        min(timeit.Timer("benchmark_inference(glove)", setup=setup).repeat(7, 1))
+    )
     print("Timing DLModel vectors (ms)")
-    print(min(timeit.Timer("benchmark_inference(lstm)", setup=setup).repeat(7, 1)))
+    print(
+        min(timeit.Timer("benchmark_inference(lstm)", setup=setup).repeat(7, 1))
+    )

@@ -146,7 +146,11 @@ def count_sentence_syllables(tokens):
     # Our tokenizer leaves punctuation as a separate word, so we filter for it here
     punctuation = ".,!?/"
     return sum(
-        [count_word_syllables(word) for word in tokens if word not in punctuation]
+        [
+            count_word_syllables(word)
+            for word in tokens
+            if word not in punctuation
+        ]
     )
 
 
@@ -156,7 +160,9 @@ def count_total_syllables(sentence_list):
     :param sentence_list:  a list of sentences, each being a list of words
     :return: the number of syllables in the sentences
     """
-    return sum([count_sentence_syllables(sentence) for sentence in sentence_list])
+    return sum(
+        [count_sentence_syllables(sentence) for sentence in sentence_list]
+    )
 
 
 def count_words_per_sentence(sentence_tokens):
@@ -175,7 +181,9 @@ def count_total_words(sentence_list):
     :param sentence_list: a list of sentences, each being a list of words
     :return: the number of words in the sentences
     """
-    return sum([count_words_per_sentence(sentence) for sentence in sentence_list])
+    return sum(
+        [count_words_per_sentence(sentence) for sentence in sentence_list]
+    )
 
 
 def get_suggestions(sentence_list):
@@ -193,7 +201,15 @@ def get_suggestions(sentence_list):
         [
             count_word_usage(
                 tokens,
-                ["when", "where", "why", "whence", "whereby", "wherein", "whereupon"],
+                [
+                    "when",
+                    "where",
+                    "why",
+                    "whence",
+                    "whereby",
+                    "wherein",
+                    "whereupon",
+                ],
             )
             for tokens in sentence_list
         ]

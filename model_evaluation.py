@@ -75,8 +75,18 @@ def get_roc_plot(predicted_proba_y, true_y):
     """
     fpr, tpr, thresholds = roc_curve(true_y, predicted_proba_y)
     roc_auc = auc(fpr, tpr)
-    plt.plot(fpr, tpr, lw=1, alpha=0.3, label="ROC curve (AUC = %0.2f)" % roc_auc)
-    plt.plot([0, 1], [0, 1], linestyle="--", lw=2, color="r", label="Chance", alpha=0.8)
+    plt.plot(
+        fpr, tpr, lw=1, alpha=0.3, label="ROC curve (AUC = %0.2f)" % roc_auc
+    )
+    plt.plot(
+        [0, 1],
+        [0, 1],
+        linestyle="--",
+        lw=2,
+        color="r",
+        label="Chance",
+        alpha=0.8,
+    )
     return plt
 
 
@@ -94,7 +104,9 @@ def get_calibration_plot(predicted_proba_y, true_y):
     ax2 = plt.subplot2grid((3, 1), (2, 0))
 
     ax1.plot([0, 1], [0, 1], "k:", label="Perfectly calibrated")
-    clf_score = brier_score_loss(true_y, predicted_proba_y, pos_label=true_y.max())
+    clf_score = brier_score_loss(
+        true_y, predicted_proba_y, pos_label=true_y.max()
+    )
     print("\tBrier: %1.3f" % clf_score)
 
     fraction_of_positives, mean_predicted_value = calibration_curve(
@@ -131,9 +143,13 @@ def get_metrics(predicted_y, true_y):
     :return:
     """
     # true positives / (true positives+false positives)
-    precision = precision_score(true_y, predicted_y, pos_label=None, average="weighted")
+    precision = precision_score(
+        true_y, predicted_y, pos_label=None, average="weighted"
+    )
     # true positives / (true positives + false negatives)
-    recall = recall_score(true_y, predicted_y, pos_label=None, average="weighted")
+    recall = recall_score(
+        true_y, predicted_y, pos_label=None, average="weighted"
+    )
 
     # harmonic mean of precision and recall
     f1 = f1_score(true_y, predicted_y, pos_label=None, average="weighted")
