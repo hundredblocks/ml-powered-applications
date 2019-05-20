@@ -69,7 +69,9 @@ def get_random_train_test_split(posts, test_size=0.3, random_state=40):
     :param test_size: the proportion to allocate to test
     :param random_state: a random seed
     """
-    train_test_split(posts, test_size=test_size, random_state=random_state)
+    return train_test_split(
+        posts, test_size=test_size, random_state=random_state
+    )
 
 
 def get_split_by_author(
@@ -83,7 +85,7 @@ def get_split_by_author(
     :param test_size: the proportion to allocate to test
     :param random_state: a random seed
     """
-    raise ValueError("Not yet implemented")
+    raise NotImplementedError()
 
 
 def get_split_by_author_and_time(
@@ -103,4 +105,4 @@ def get_split_by_author_and_time(
     :param test_size: the proportion to allocate to test
     :param random_state: a random seed
     """
-    raise ValueError("Not yet implemented")
+    raise NotImplementedError()
