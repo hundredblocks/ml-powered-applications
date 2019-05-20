@@ -5,7 +5,7 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GroupShuffleSplit
 
 from ml_editor import preprocess_input
 
@@ -85,7 +85,11 @@ def get_split_by_author(
     :param test_size: the proportion to allocate to test
     :param random_state: a random seed
     """
-    raise NotImplementedError()
+    splitter = GroupShuffleSplit(
+        n_splits=1, test_size=test_size, random_state=random_state
+    )
+    splits = splitter.split(posts, groups=posts[author_id_column])
+    return next(splits)
 
 
 def get_split_by_author_and_time(
