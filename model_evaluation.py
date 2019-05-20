@@ -11,6 +11,7 @@ from sklearn.metrics import (
 )
 import matplotlib.pyplot as plt
 import numpy as np
+import itertools
 
 
 def get_confusion_matrix_plot(
@@ -19,11 +20,13 @@ def get_confusion_matrix_plot(
     classes=None,
     normalize=False,
     title="Confusion matrix",
-    cmap=plt.cm.winter,
+    cmap=plt.get_cmap("binary"),
+    figsize=(10, 10),
 ):
     """
     Inspired by sklearn example
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
+    :param figsize: size of the output figure
     :param predicted_y: model's predicted values
     :param true_y:  true value of the labels
     :param classes: names of both classes
@@ -38,68 +41,129 @@ def get_confusion_matrix_plot(
     cm = confusion_matrix(true_y, predicted_y)
     if normalize:
         cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
-    plt.imshow(cm, interpolation="nearest", cmap=cmap)
-    plt.title(title, fontsize=30)
-    plt.colorbar()
+
+    plt.figure(figsize=figsize)
+    ax = plt.gca()
+    im = ax.imshow(cm, interpolation="nearest", cmap=cmap)
+
+    title_obj = plt.title(title, fontsize=30)
+    title_obj.set_position([0.5, 1.15])
+
+    plt.colorbar(im)
+
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, fontsize=20)
-    plt.yticks(tick_marks, classes, fontsize=20)
+    plt.xticks(tick_marks, classes, fontsize=15)
+    plt.yticks(tick_marks, classes, fontsize=15)
 
     fmt = ".2f" if normalize else "d"
-    thresh = cm.max() / 2.0
-
-    for i, j in np.itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+    thresh = (cm.max() - cm.min()) / 2.0 + cm.min()
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         plt.text(
             j,
             i,
             format(cm[i, j], fmt),
             horizontalalignment="center",
-            color="white" if cm[i, j] < thresh else "black",
+            color="white" if cm[i, j] > thresh else "black",
             fontsize=40,
         )
 
     plt.tight_layout()
-    plt.ylabel("True label", fontsize=30)
-    plt.xlabel("Predicted label", fontsize=30)
+    plt.ylabel("True label", fontsize=20)
+    plt.xlabel("Predicted label", fontsize=20)
 
     return plt
 
 
-def get_roc_plot(predicted_proba_y, true_y):
+def get_roc_plot(
+    predicted_proba_y, true_y, tpr_bar=-1, fpr_bar=-1, figsize=(10, 10)
+):
     """
     Inspired by sklearn example
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc_crossval.html
+    :param fpr_bar: A threshold false positive value to draw
+    :param tpr_bar: A threshold false negative value to draw
+    :param figsize: size of the output figure
     :param predicted_proba_y: the predicted probabilities of our model for each example
     :param true_y: the true value of the label
     :return:roc plot
     """
     fpr, tpr, thresholds = roc_curve(true_y, predicted_proba_y)
     roc_auc = auc(fpr, tpr)
+
+    plt.figure(figsize=figsize)
     plt.plot(
-        fpr, tpr, lw=1, alpha=0.3, label="ROC curve (AUC = %0.2f)" % roc_auc
+        fpr,
+        tpr,
+        lw=1,
+        alpha=1,
+        color="black",
+        label="ROC curve (AUC = %0.2f)" % roc_auc,
     )
     plt.plot(
         [0, 1],
         [0, 1],
         linestyle="--",
         lw=2,
-        color="r",
+        color="grey",
         label="Chance",
-        alpha=0.8,
+        alpha=1,
     )
+
+    # Cheating on position to make plot more readable
+    plt.plot(
+        [0.01],
+        [0.99],
+        linestyle="",
+        marker="X",
+        markersize=10,
+        color="black",
+        label="Perfect model",
+    )
+
+    if tpr_bar != -1:
+        plt.plot(
+            [0, 1],
+            [tpr_bar, tpr_bar],
+            linestyle="-",
+            lw=2,
+            color="red",
+            label="TPR requirement",
+            alpha=1,
+        )
+        plt.fill_between([0, 1], [tpr_bar, tpr_bar], [1, 1], alpha=0, hatch="\\")
+
+    if fpr_bar != -1:
+        plt.plot(
+            [fpr_bar, fpr_bar],
+            [0, 1],
+            linestyle="-",
+            lw=2,
+            color="red",
+            label="FPR requirement",
+            alpha=1,
+        )
+        plt.fill_between([fpr_bar, 1], [1, 1], alpha=0, hatch="\\")
+
+    plt.legend(loc="lower right")
+
+    plt.ylabel("True positive rate", fontsize=20)
+    plt.xlabel("False positive rate", fontsize=20)
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
     return plt
 
 
-def get_calibration_plot(predicted_proba_y, true_y):
+def get_calibration_plot(predicted_proba_y, true_y, figsize=(10, 10)):
     """
     Inspired by sklearn example
     https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html
+    :param figsize: size of the output figure
     :param predicted_proba_y: the predicted probabilities of our model for each example
     :param true_y: the true value of the label
     :return: calibration plot
     """
 
-    fig = plt.figure()
+    plt.figure(figsize=figsize)
     ax1 = plt.subplot2grid((3, 1), (0, 0), rowspan=2)
     ax2 = plt.subplot2grid((3, 1), (2, 0))
 
@@ -117,16 +181,26 @@ def get_calibration_plot(predicted_proba_y, true_y):
         mean_predicted_value,
         fraction_of_positives,
         "s-",
-        label="Brier score: (%1.3f)" % clf_score,
+        color="black",
+        label="%1.3f Brier score (0 is best, 1 is worst)" % clf_score,
     )
 
-    ax2.hist(predicted_proba_y, range=(0, 1), bins=10, histtype="step", lw=2)
+    ax2.hist(
+        predicted_proba_y,
+        range=(0, 1),
+        bins=10,
+        histtype="step",
+        lw=2,
+        color="black",
+    )
 
     ax1.set_ylabel("Fraction of positives")
-    ax1.set_ylim([-0.05, 1.05])
+    ax1.set_xlim([0, 1])
+    ax1.set_ylim([0, 1])
     ax1.legend(loc="lower right")
-    ax1.set_title("Calibration plot  (reliability curve)")
+    ax1.set_title("Calibration plot")
 
+    ax2.set_title("Probability distribution")
     ax2.set_xlabel("Mean predicted value")
     ax2.set_ylabel("Count")
     ax2.legend(loc="upper center", ncol=2)
