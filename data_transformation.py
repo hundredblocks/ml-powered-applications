@@ -90,23 +90,3 @@ def get_split_by_author(
     )
     splits = splitter.split(posts, groups=posts[author_id_column])
     return next(splits)
-
-
-def get_split_by_author_and_time(
-    posts,
-    author_id_column="OwnerUserId",
-    posted_column="CreationDate",
-    test_size=0.3,
-    random_state=40,
-):
-    """
-    Get train/test split,
-    Guarantee every author only appears in one of the splits
-    Guarantee all training examples happen before test ones
-    :param posts: all posts, with their labels
-    :param posted_column: name of the column containing posted date
-    :param author_id_column: name of the column containing the author_id
-    :param test_size: the proportion to allocate to test
-    :param random_state: a random seed
-    """
-    raise NotImplementedError()
