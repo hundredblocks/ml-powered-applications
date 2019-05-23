@@ -89,4 +89,5 @@ def get_split_by_author(
         n_splits=1, test_size=test_size, random_state=random_state
     )
     splits = splitter.split(posts, groups=posts[author_id_column])
-    return next(splits)
+    train_idx, test_idx = next(splits)
+    return posts.iloc[train_idx, :], posts.iloc[test_idx, :]
