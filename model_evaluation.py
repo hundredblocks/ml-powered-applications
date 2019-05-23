@@ -231,3 +231,21 @@ def get_metrics(predicted_y, true_y):
     # true positives + true negatives/ total
     accuracy = accuracy_score(true_y, predicted_y)
     return accuracy, precision, recall, f1
+
+
+def get_feature_importance(clf, feature_names):
+    """
+    Get a list of feature importances for a classifier
+    :param clf: a scikit-learn classifier
+    :param feature_names: a list of the names of features
+    in the order they were given to the classifier
+    :return: sorted list of tuples of the form (feat_name, score)
+    """
+    importances = clf.feature_importances_
+    indices_sorted_by_importance = np.argsort(importances)[::-1]
+    return list(
+        zip(
+            feature_names[indices_sorted_by_importance],
+            importances[indices_sorted_by_importance],
+        )
+    )
