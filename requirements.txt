@@ -13,3 +13,4 @@ bokeh
 pyphen
 nltk
 lime
+pytest
