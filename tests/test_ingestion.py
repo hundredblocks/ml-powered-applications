@@ -23,28 +23,44 @@ ACCEPTABLE_TEXT_LENGTH_MEANS = pd.Interval(left=20, right=2000)
 
 
 def get_fixture_df():
+    """
+    Use parser to return DataFrame
+    :return:
+    """
     curr_path = Path(os.path.dirname(__file__))
     return parse_xml_to_csv(curr_path / Path("fixtures/MiniPosts.xml"))
 
 
 def test_parser_returns_dataframe():
+    """
+    Tests that our parser runs and returns a DataFrame
+    """
     df = get_fixture_df()
     assert isinstance(df, pd.DataFrame)
 
 
 def test_feature_columns_exist():
+    """
+    Validate that all required columns are present
+    """
     df = get_fixture_df()
     for col in REQUIRED_COLUMNS:
         assert col in df.columns
 
 
 def test_features_not_all_null():
+    """
+    Validate that no features are missing every value
+    """
     df = get_fixture_df()
     for col in REQUIRED_COLUMNS:
         assert not df[col].isnull().all()
 
 
 def test_text_mean():
+    """
+    Validate that text mean matches with exploration expectations
+    """
     df = get_fixture_df()
     text_col_mean = df["text_len"].mean()
     assert text_col_mean in ACCEPTABLE_TEXT_LENGTH_MEANS
