@@ -5,7 +5,6 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
 import pandas as pd
-from sklearn.model_selection import train_test_split, GroupShuffleSplit
 
 from ml_editor import preprocess_input
 
@@ -59,35 +58,3 @@ def get_data_from_dump(site_name, load_existing=True):
         all_data = pd.DataFrame.from_csv(extracted_path)
 
     return all_data
-
-
-def get_random_train_test_split(posts, test_size=0.3, random_state=40):
-    """
-    Get train/test split from DataFrame
-    Assumes the DataFrame has one row per question example
-    :param posts: all posts, with their labels
-    :param test_size: the proportion to allocate to test
-    :param random_state: a random seed
-    """
-    return train_test_split(
-        posts, test_size=test_size, random_state=random_state
-    )
-
-
-def get_split_by_author(
-    posts, author_id_column="OwnerUserId", test_size=0.3, random_state=40
-):
-    """
-    Get train/test split
-    Guarantee every author only appears in one of the splits
-    :param posts: all posts, with their labels
-    :param author_id_column: name of the column containing the author_id
-    :param test_size: the proportion to allocate to test
-    :param random_state: a random seed
-    """
-    splitter = GroupShuffleSplit(
-        n_splits=1, test_size=test_size, random_state=random_state
-    )
-    splits = splitter.split(posts, groups=posts[author_id_column])
-    train_idx, test_idx = next(splits)
-    return posts.iloc[train_idx, :], posts.iloc[test_idx, :]
