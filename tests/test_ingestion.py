@@ -9,13 +9,15 @@ sys.path.insert(0, myPath + "/../")
 
 from data_ingestion import parse_xml_to_csv
 
+TEXT_LENGTH_FIELD = "text_len"
+
 # We defined the features required at the top level of our test
 REQUIRED_COLUMNS = [
     "AnswerCount",
     "PostTypeId",
     "AcceptedAnswerId",
     "Body",
-    "text_len",
+    TEXT_LENGTH_FIELD,
 ]
 
 # Acceptable interval created based on data exploration
@@ -62,5 +64,5 @@ def test_text_mean():
     Validate that text mean matches with exploration expectations
     """
     df = get_fixture_df()
-    text_col_mean = df["text_len"].mean()
+    text_col_mean = df[TEXT_LENGTH_FIELD].mean()
     assert text_col_mean in ACCEPTABLE_TEXT_LENGTH_MEANS
