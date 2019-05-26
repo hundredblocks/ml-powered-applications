@@ -9,7 +9,7 @@ import pandas as pd
 from ml_editor import preprocess_input
 
 
-def parse_xml_to_csv(path):
+def parse_xml_to_csv(path, save_path=None):
     """
     Open .xml posts dump and convert the text to a csv, tokenizing it in the process
     :param path: path to the xml document containing posts
@@ -35,6 +35,8 @@ def parse_xml_to_csv(path):
         item["text_len"] = num_words
     # Create dataframe from our list of dictionaries
     df = pd.DataFrame.from_dict(all_rows)
+    if save_path:
+        df.to_csv(save_path)
     return df
 
 
