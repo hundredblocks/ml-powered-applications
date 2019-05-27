@@ -13,7 +13,7 @@ TEXT_LENGTH_FIELD = "text_len"
 
 # We defined the features required at the top level of our test
 REQUIRED_COLUMNS = [
-    "id",
+    "Id",
     "AnswerCount",
     "PostTypeId",
     "AcceptedAnswerId",
