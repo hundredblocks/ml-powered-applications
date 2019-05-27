@@ -59,6 +59,7 @@ def test_author_split_no_leakage():
     assert len(train_owners.intersection(test_owners)) == 0
 
 
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_feature_presence(df_with_features):
     for feat in REQUIRED_FEATURES:
         assert feat in df_with_features.columns
