@@ -76,8 +76,12 @@ def add_features_to_df(df):
         | df["full_text"].str.contains("What", regex=False)
         | df["full_text"].str.contains("should", regex=False)
     )
+    df["language_question"] = (
+        df["body_text"].str.contains("punctuate", regex=False)
+        | df["body_text"].str.contains("capitalize", regex=False)
+        | df["body_text"].str.contains("abbreviate", regex=False)
+    )
     df["question_mark_full"] = df["full_text"].str.contains("?", regex=False)
-
     df["norm_text_len"] = get_normalized_series(df, "text_len")
 
     return df
@@ -102,7 +106,7 @@ def get_vectorized_inputs_and_label(df):
         ],
         1,
     )
-    label = df["AcceptedAnswerId"].notna()
+    label = df["AcceptedAnswerId"].notna().values
 
     return vectorized_features, label
 
