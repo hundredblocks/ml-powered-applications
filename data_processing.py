@@ -106,7 +106,7 @@ def get_vectorized_inputs_and_label(df):
         ],
         1,
     )
-    label = df["AcceptedAnswerId"].notna().values
+    label = df["AcceptedAnswerId"].notna()
 
     return vectorized_features, label
 
