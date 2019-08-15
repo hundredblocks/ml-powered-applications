@@ -1,5 +1,6 @@
 import spacy
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split, GroupShuffleSplit
 
@@ -151,3 +152,19 @@ def get_split_by_author(
     splits = splitter.split(posts, groups=posts[author_id_column])
     train_idx, test_idx = next(splits)
     return posts.iloc[train_idx, :], posts.iloc[test_idx, :]
+
+
+def get_filtering_model(classifier, features, labels):
+    """
+    Get prediction error for a binary classification dataset
+    :param classifier: trained classifier
+    :param features: input features
+    :param labels: true labels
+    """
+    predictions = classifier.predict(features)
+    # Create labels where errors are 1, and correct guesses are 0
+    is_error = [pred != truth for pred, truth in zip(predictions, labels)]
+
+    filtering_model = RandomForestClassifier()
+    filtering_model.fit(features, is_error)
+    return filtering_model
