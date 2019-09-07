@@ -54,7 +54,9 @@ def get_vectorized_representation(text_series, pretrained=False):
         vectorizer = TfidfVectorizer(
             ngram_range=(1, 2), min_df=5, max_features=2 ** 21
         )
-        vectors = vectorizer.fit_transform(text_series)
+        # We make the matrix dense here to then append additional features to it
+        # more easily. This has a negative impact on performance
+        vectors = vectorizer.fit_transform(text_series).toarray()
     return vectorizer, vectors
 
 
