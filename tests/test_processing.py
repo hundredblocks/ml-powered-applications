@@ -11,8 +11,8 @@ import pytest
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + "/../")
 
-from data_ingestion import parse_xml_to_csv
-from data_processing import (
+from ml_editor.data_ingestion import parse_xml_to_csv
+from ml_editor.data_processing import (
     get_random_train_test_split,
     get_split_by_author,
     add_features_to_df,
@@ -41,7 +41,7 @@ def get_csv():
 def df_with_features():
     df = pd.read_csv(CURR_PATH / CSV_PATH)
     df = format_raw_df(df.copy())
-    return add_features_to_df(df.copy())
+    return add_features_to_df(df.copy(), pretrained_vectors=True)
 
 
 def test_random_split_proportion():

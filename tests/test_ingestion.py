@@ -7,7 +7,7 @@ import pandas as pd
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + "/../")
 
-from data_ingestion import parse_xml_to_csv
+from ml_editor.data_ingestion import parse_xml_to_csv
 
 TEXT_LENGTH_FIELD = "text_len"
 

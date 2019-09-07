@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
 import pandas as pd
 
-from ml_editor import preprocess_input
+from ml_editor.ml_editor import preprocess_input
 
 
 def parse_xml_to_csv(path, save_path=None):
