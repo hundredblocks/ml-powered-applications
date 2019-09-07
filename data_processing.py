@@ -58,16 +58,17 @@ def get_vectorized_representation(text_series, pretrained=False):
     return vectorizer, vectors
 
 
-def add_features_to_df(df):
+def add_features_to_df(df, pretrained_vectors=False):
     """
     Ads features to DataFrame
     :param df: DataFrame
+    :param pretrained_vectors: whether to use pretrained vectors for embeddings
     :return: DataFrame with additional features
     """
     df["full_text"] = df["Title"].str.cat(df["body_text"], sep=" ", na_rep="")
 
     vectorizer, vectors = get_vectorized_representation(
-        df["full_text"].copy(), pretrained=True
+        df["full_text"].copy(), pretrained=pretrained_vectors
     )
     list_vectors = [list(vec) for vec in vectors]
     df["vectors"] = list_vectors
@@ -92,7 +93,6 @@ def get_vectorized_inputs_and_label(df):
     """
     Concatenate DataFrame features with text vectors
     :param df: DataFrame with calculated features
-    :param vectors: vectorized text
     :return: concatenated vector consisting of features and text
     """
     vectorized_features = np.append(
