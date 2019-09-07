@@ -111,13 +111,13 @@ def get_roc_plot(
 
     # Cheating on position to make plot more readable
     plt.plot(
-        [0.01],
-        [0.99],
-        linestyle="",
-        marker="X",
-        markersize=10,
-        color="black",
+        [0.01, 0.01, 1],
+        [0.01, 0.99, 0.99],
+        linestyle=":",
+        lw=2,
+        color="green",
         label="Perfect model",
+        alpha=1,
     )
 
     if tpr_bar != -1:
