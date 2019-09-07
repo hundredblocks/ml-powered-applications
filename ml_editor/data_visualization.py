@@ -22,5 +22,3 @@ def plot_embeddings(embeddings, sent_labels):
     plt.gca().set_aspect("equal", "box")
     plt.gca().set_xlabel("x")
     plt.gca().set_ylabel("y")
-
-    return fig
