@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -13,10 +14,12 @@ FEATURE_ARR = [
     "language_question",
 ]
 
+curr_path = Path(os.path.dirname(__file__))
+
 model_path = Path("../models/model_1.pkl")
 vectorizer_path = Path("../models/vectorizer_1.pkl")
-VECTORIZER = joblib.load(vectorizer_path)
-MODEL = joblib.load(model_path)
+VECTORIZER = joblib.load(curr_path / vectorizer_path)
+MODEL = joblib.load(curr_path / model_path)
 
 
 def get_model_probabilities_for_input_texts(text_array):
@@ -28,3 +31,9 @@ def get_model_probabilities_for_input_texts(text_array):
     num_features = text_ser[FEATURE_ARR].astype(float)
     features = hstack([vec_features, num_features])
     return MODEL.predict_proba(features)
+
+
+def get_model_predictions_for_input_texts(text_array):
+    probs = get_model_probabilities_for_input_texts(text_array)
+    predicted_classes = probs[:, 0] < probs[:, 1]
+    return predicted_classes
