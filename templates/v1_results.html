@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>test</title>
+    </head>
+    <body>
+        <h1>Input</h1>
+        <p>{{ml_result.input}}</p>
+        <h1>Recommendations</h1>
+        <p >{% autoescape false %}
+        {{ml_result.suggestions}}
+        {% endautoescape %}</p>
+    </body>
+</html>
