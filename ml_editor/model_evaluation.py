@@ -36,7 +36,7 @@ def get_confusion_matrix_plot(
     :return: plot for the confusion matrix
     """
     if classes is None:
-        classes = ["Answered", "Unanswered"]
+        classes = ["Low quality", "High quality"]
 
     cm = confusion_matrix(true_y, predicted_y)
     if normalize:

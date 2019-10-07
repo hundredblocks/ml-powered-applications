@@ -188,17 +188,18 @@ def count_total_words(sentence_list):
 
 def get_suggestions(sentence_list):
     """
-    Sends suggestions out to the logger's info level
+    Returns a string containing our suggestions
     :param sentence_list: a list of sentences, each being a list of words
+    :return: suggestions to improve the input
     """
     told_said_usage = sum(
-        [count_word_usage(tokens, ["told", "said"]) for tokens in sentence_list]
+        (count_word_usage(tokens, ["told", "said"]) for tokens in sentence_list)
     )
     but_and_usage = sum(
-        [count_word_usage(tokens, ["but", "and"]) for tokens in sentence_list]
+        (count_word_usage(tokens, ["but", "and"]) for tokens in sentence_list)
     )
     wh_adverbs_usage = sum(
-        [
+        (
             count_word_usage(
                 tokens,
                 [
@@ -212,39 +213,52 @@ def get_suggestions(sentence_list):
                 ],
             )
             for tokens in sentence_list
-        ]
+        )
     )
-    logger.info(
-        "Adverb usage: %s told/said, %s but/and, %s wh adverbs"
-        % (told_said_usage, but_and_usage, wh_adverbs_usage)
+    result_str = ""
+    adverb_usage = "Adverb usage: %s told/said, %s but/and, %s wh adverbs" % (
+        told_said_usage,
+        but_and_usage,
+        wh_adverbs_usage,
     )
+    result_str += adverb_usage
     average_word_length = compute_total_average_word_length(sentence_list)
     unique_words_fraction = compute_total_unique_words_fraction(sentence_list)
 
-    logger.info(
-        "Average word length %.2f, fraction of unique words %.2f"
-        % (average_word_length, unique_words_fraction)
+    word_stats = "Average word length %.2f, fraction of unique words %.2f" % (
+        average_word_length,
+        unique_words_fraction,
     )
+    # Using HTML break to later display on a webapp
+    result_str += "<br/>"
+    result_str += word_stats
 
     number_of_syllables = count_total_syllables(sentence_list)
     number_of_words = count_total_words(sentence_list)
     number_of_sentences = len(sentence_list)
-    logger.info(
-        "%d syllables, %d words, %d sentences"
-        % (number_of_syllables, number_of_words, number_of_sentences)
+
+    syllable_counts = "%d syllables, %d words, %d sentences" % (
+        number_of_syllables,
+        number_of_words,
+        number_of_sentences,
     )
+    result_str += "<br/>"
+    result_str += syllable_counts
 
     flesch_score = compute_flesch_reading_ease(
         number_of_syllables, number_of_words, number_of_sentences
     )
-    logger.info(
-        "%d syllables, %.2f flesch score: %s"
-        % (
-            number_of_syllables,
-            flesch_score,
-            get_reading_level_from_flesch(flesch_score),
-        )
+
+    flesch = "%d syllables, %.2f flesch score: %s" % (
+        number_of_syllables,
+        flesch_score,
+        get_reading_level_from_flesch(flesch_score),
     )
+
+    result_str += "<br/>"
+    result_str += flesch
+
+    return result_str
 
 
 def display_recommendations(sentence_list):
@@ -260,9 +274,13 @@ def display_recommendations(sentence_list):
     print(" ".join(out))
 
 
-if __name__ == "__main__":
-    input_text = parse_arguments()
-    processed = clean_input(input_text)
+def get_recommendations_from_input(txt):
+    processed = clean_input(txt)
     tokenized_sentences = preprocess_input(processed)
     suggestions = get_suggestions(tokenized_sentences)
-    # suggestions = display_recommendations(tokenized_sentences)
+    return suggestions
+
+
+if __name__ == "__main__":
+    input_text = parse_arguments()
+    print(get_recommendations_from_input(input_text))

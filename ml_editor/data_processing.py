@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split, GroupShuffleSplit
+from scipy.sparse import vstack, hstack
 
 
 def format_raw_df(df):
@@ -27,14 +28,34 @@ def format_raw_df(df):
 
     # Linking questions and answers
     df = df.join(
-        df[
-            ["Id", "Title", "body_text", "text_len", "Score", "AcceptedAnswerId"]
-        ],
+        df[["Id", "Title", "body_text", "Score", "AcceptedAnswerId"]],
         on="ParentId",
         how="left",
         rsuffix="_question",
     )
     return df
+
+
+def train_vectorizer(df):
+    """
+    Train a vectorizer for some data.
+    Returns the vectorizer to be used to transform non-training data, in
+    addition to the training vectors
+    :param df: data to use to train the vectorizer
+    :return: trained vectorizers and training vectors
+    """
+    vectorizer = TfidfVectorizer(
+        strip_accents="ascii", min_df=5, max_df=0.5, max_features=10000
+    )
+
+    vectorizer.fit(df["full_text"].copy())
+    return vectorizer
+
+
+def get_vectorized_series(text_series, vectorizer):
+    vectors = vectorizer.transform(text_series)
+    vectorized_series = [vectors[i] for i in range(vectors.shape[0])]
+    return vectorized_series
 
 
 def get_vectorized_representation(text_series, pretrained=False):
@@ -52,7 +73,7 @@ def get_vectorized_representation(text_series, pretrained=False):
 
     else:
         vectorizer = TfidfVectorizer(
-            ngram_range=(1, 2), min_df=5, max_features=2 ** 21
+            strip_accents="ascii", min_df=5, max_df=0.5, max_features=10000
         )
         # We make the matrix dense here to then append additional features to it
         # more easily. This has a negative impact on performance
@@ -60,7 +81,7 @@ def get_vectorized_representation(text_series, pretrained=False):
     return vectorizer, vectors
 
 
-def add_features_to_df(df, pretrained_vectors=False):
+def add_text_features_to_df(df):
     """
     Ads features to DataFrame
     :param df: DataFrame
@@ -68,26 +89,36 @@ def add_features_to_df(df, pretrained_vectors=False):
     :return: DataFrame with additional features
     """
     df["full_text"] = df["Title"].str.cat(df["body_text"], sep=" ", na_rep="")
+    # TODO removing, check that this works
+    # vectorizer, vectors = get_vectorized_representation(
+    #     df["full_text"].copy(), pretrained=pretrained_vectors
+    # )
+    # list_vectors = [list(vec) for vec in vectors]
+    # df["vectors"] = list_vectors
 
-    vectorizer, vectors = get_vectorized_representation(
-        df["full_text"].copy(), pretrained=pretrained_vectors
-    )
-    list_vectors = [list(vec) for vec in vectors]
-    df["vectors"] = list_vectors
+    df = add_v1_features(df.copy())
 
+    return df
+
+
+def add_v1_features(df):
+    """
+    Add our first features to an input DataFrame
+    :param df: DataFrame of questions
+    :return: DataFrame with added feature columns
+    """
     df["action_verb_full"] = (
         df["full_text"].str.contains("can", regex=False)
         | df["full_text"].str.contains("What", regex=False)
         | df["full_text"].str.contains("should", regex=False)
     )
     df["language_question"] = (
-        df["body_text"].str.contains("punctuate", regex=False)
-        | df["body_text"].str.contains("capitalize", regex=False)
-        | df["body_text"].str.contains("abbreviate", regex=False)
+        df["full_text"].str.contains("punctuate", regex=False)
+        | df["full_text"].str.contains("capitalize", regex=False)
+        | df["full_text"].str.contains("abbreviate", regex=False)
     )
     df["question_mark_full"] = df["full_text"].str.contains("?", regex=False)
-    df["norm_text_len"] = get_normalized_series(df, "text_len")
-
+    df["text_len"] = df["full_text"].str.len()
     return df
 
 
@@ -109,9 +140,24 @@ def get_vectorized_inputs_and_label(df):
         ],
         1,
     )
-    label = df["AcceptedAnswerId"].notna()
+    label = df["Score"] > df["Score"].median()
 
     return vectorized_features, label
+
+
+def get_feature_vector_and_label(df, feature_names):
+    """
+    Generate input and output vectors using the vectors feature and
+     the given feature names
+    :param df: input DataFrame
+    :param feature_names: names of feature columns (other than vectors)
+    :return: feature array and label array
+    """
+    vec_features = vstack(df["vectors"])
+    num_features = df[feature_names].astype(float)
+    features = hstack([vec_features, num_features])
+    labels = df["Score"] > df["Score"].median()
+    return features, labels
 
 
 def get_normalized_series(df, col):
@@ -121,6 +167,7 @@ def get_normalized_series(df, col):
     :param col: column name
     :return: normalized series
     """
+    # TODO fix
     return (df[col] - df[col].mean()) / (df[col].max() - df[col].min())
 
 

@@ -6,8 +6,6 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
 import pandas as pd
 
-from ml_editor.ml_editor import preprocess_input
-
 
 def parse_xml_to_csv(path, save_path=None):
     """
@@ -29,10 +27,6 @@ def parse_xml_to_csv(path, save_path=None):
         soup = BeautifulSoup(item["Body"], features="html.parser")
         item["body_text"] = soup.get_text()
 
-        # Tokenize text using our preprocessing function
-        item["tokenized"] = preprocess_input(item["body_text"])
-        num_words = len([word for sent in item["tokenized"] for word in sent])
-        item["text_len"] = num_words
     # Create dataframe from our list of dictionaries
     df = pd.DataFrame.from_dict(all_rows)
     if save_path:
