@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 
 from pathlib import Path
 import pandas as pd
@@ -21,7 +22,6 @@ REQUIRED_COLUMNS = [
     "body_text",
     "Title",
     "Score",
-    TEXT_LENGTH_FIELD,
 ]
 
 # Acceptable interval created based on data exploration
@@ -68,5 +68,6 @@ def test_text_mean():
     Validate that text mean matches with exploration expectations
     """
     df = get_fixture_df()
-    text_col_mean = df[TEXT_LENGTH_FIELD].mean()
+    df["text_len"] = df["body_text"].str.len()
+    text_col_mean = df["text_len"].mean()
     assert text_col_mean in ACCEPTABLE_TEXT_LENGTH_MEANS

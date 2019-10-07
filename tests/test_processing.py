@@ -1,9 +1,8 @@
 # We defined the features required at the top level of our test
-import os
 import sys
+import os
 from pathlib import Path
 import pandas as pd
-import numpy as np
 
 import pytest
 
@@ -15,7 +14,7 @@ from ml_editor.data_ingestion import parse_xml_to_csv
 from ml_editor.data_processing import (
     get_random_train_test_split,
     get_split_by_author,
-    add_features_to_df,
+    add_text_features_to_df,
     format_raw_df,
 )
 
@@ -24,7 +23,7 @@ REQUIRED_FEATURES = [
     "action_verb_full",
     "language_question",
     "question_mark_full",
-    "norm_text_len",
+    "text_len",
 ]
 CURR_PATH = Path(os.path.dirname(__file__))
 XML_PATH = Path("fixtures/MiniPosts.xml")
@@ -41,7 +40,7 @@ def get_csv():
 def df_with_features():
     df = pd.read_csv(CURR_PATH / CSV_PATH)
     df = format_raw_df(df.copy())
-    return add_features_to_df(df.copy(), pretrained_vectors=True)
+    return add_text_features_to_df(df.copy())
 
 
 def test_random_split_proportion():
@@ -70,18 +69,13 @@ def test_feature_type(df_with_features):
     assert df_with_features["action_verb_full"].dtype == bool
     assert df_with_features["language_question"].dtype == bool
     assert df_with_features["question_mark_full"].dtype == bool
-    assert df_with_features["norm_text_len"].dtype == float
-    assert df_with_features["vectors"].dtype == list
+    assert df_with_features["text_len"].dtype == int
 
 
-def test_vector_length(df_with_features):
-    assert np.vstack(df_with_features["vectors"]).shape[1] == 300
-
-
-def test_normalized_text_length(df_with_features):
-    normalized_mean = df_with_features["norm_text_len"].mean()
-    normalized_max = df_with_features["norm_text_len"].max()
-    normalized_min = df_with_features["norm_text_len"].min()
-    assert normalized_mean in pd.Interval(left=-1, right=1)
-    assert normalized_max in pd.Interval(left=-1, right=1)
-    assert normalized_min in pd.Interval(left=-1, right=1)
+def test_text_length(df_with_features):
+    text_mean = df_with_features["text_len"].mean()
+    text_max = df_with_features["text_len"].max()
+    text_min = df_with_features["text_len"].min()
+    assert text_mean in pd.Interval(left=200, right=1000)
+    assert text_max in pd.Interval(left=0, right=10000)
+    assert text_min in pd.Interval(left=0, right=1000)
