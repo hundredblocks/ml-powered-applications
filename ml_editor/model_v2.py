@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import spacy
@@ -51,10 +52,12 @@ FEATURE_ARR.extend(POS_NAMES.keys())
 SPACY_MODEL = spacy.load("en_core_web_sm")
 tqdm.pandas()
 
+curr_path = Path(os.path.dirname(__file__))
+
 model_path = Path("../models/model_2.pkl")
 vectorizer_path = Path("../models/vectorizer_2.pkl")
-VECTORIZER = joblib.load(vectorizer_path)
-MODEL = joblib.load(model_path)
+VECTORIZER = joblib.load(curr_path / vectorizer_path)
+MODEL = joblib.load(curr_path / model_path)
 
 
 def count_each_pos(df):
@@ -74,12 +77,14 @@ def get_word_stats(df):
     global SPACY_MODEL
     df["spacy_text"] = df["full_text"].progress_apply(lambda x: SPACY_MODEL(x))
 
-    df["num_words"] = df["spacy_text"].apply(lambda x: len(x)) / df["num_chars"]
+    df["num_words"] = (
+        df["spacy_text"].apply(lambda x: 100 * len(x)) / df["num_chars"]
+    )
     df["num_diff_words"] = df["spacy_text"].apply(lambda x: len(set(x)))
     df["avg_word_len"] = df["spacy_text"].apply(lambda x: get_avg_wd_len(x))
     df["num_stops"] = (
         df["spacy_text"].apply(
-            lambda x: len([stop for stop in x if stop.is_stop])
+            lambda x: 100 * len([stop for stop in x if stop.is_stop])
         )
         / df["num_chars"]
     )
@@ -98,13 +103,13 @@ def get_avg_wd_len(tokens):
 def add_char_count_features(df):
     df["num_chars"] = df["full_text"].str.len()
 
-    df["num_questions"] = df["full_text"].str.count("\?") / df["num_chars"]
-    df["num_periods"] = df["full_text"].str.count("\.") / df["num_chars"]
-    df["num_commas"] = df["full_text"].str.count(",") / df["num_chars"]
-    df["num_exclam"] = df["full_text"].str.count("!") / df["num_chars"]
-    df["num_quotes"] = df["full_text"].str.count('"') / df["num_chars"]
-    df["num_colon"] = df["full_text"].str.count(":") / df["num_chars"]
-    df["num_semicolon"] = df["full_text"].str.count(";") / df["num_chars"]
+    df["num_questions"] = 100 * df["full_text"].str.count("\?") / df["num_chars"]
+    df["num_periods"] = 100 * df["full_text"].str.count("\.") / df["num_chars"]
+    df["num_commas"] = 100 * df["full_text"].str.count(",") / df["num_chars"]
+    df["num_exclam"] = 100 * df["full_text"].str.count("!") / df["num_chars"]
+    df["num_quotes"] = 100 * df["full_text"].str.count('"') / df["num_chars"]
+    df["num_colon"] = 100 * df["full_text"].str.count(":") / df["num_chars"]
+    df["num_semicolon"] = 100 * df["full_text"].str.count(";") / df["num_chars"]
     return df
 
 
@@ -116,13 +121,18 @@ def get_sentiment_score(df):
     return df
 
 
+def add_v2_text_features(df):
+    df = add_char_count_features(df.copy())
+    df = get_word_stats(df.copy())
+    df = get_sentiment_score(df.copy())
+    return df
+
+
 def get_model_probabilities_for_input_texts(text_array):
     global FEATURE_ARR, VECTORIZER, MODEL
     vectors = VECTORIZER.transform(text_array)
     text_ser = pd.DataFrame(text_array, columns=["full_text"])
-    text_ser = add_char_count_features(text_ser.copy())
-    text_ser = get_word_stats(text_ser.copy())
-    text_ser = get_sentiment_score(text_ser.copy())
+    text_ser = add_v2_text_features(text_ser.copy())
     vec_features = vstack(vectors)
     num_features = text_ser[FEATURE_ARR].astype(float)
     features = hstack([vec_features, num_features])
