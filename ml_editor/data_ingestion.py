@@ -6,6 +6,30 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ElT
 import pandas as pd
 
+from ml_editor.data_processing import format_raw_df, add_v1_features
+from ml_editor.model_v2 import add_v2_text_features
+
+
+def generate_model_text_features(raw_df_path, save_path=None):
+    """
+    A function to generate features for model 2 and save them to disk.
+    These features take multiple minutes to compute
+    :param raw_df_path: path to raw DataFrame (generated from parse_xml_to_csv)
+    :param save_path: path to save processed DataFrame to
+    :return: processed DataFrame
+    """
+    df = pd.read_csv(raw_df_path)
+    df = format_raw_df(df.copy())
+    df = df.loc[df["is_question"]].copy()
+    df["full_text"] = df["Title"].str.cat(df["body_text"], sep=" ", na_rep="")
+
+    df = add_v1_features(df.copy())
+    df = add_v2_text_features(df.copy())
+
+    if save_path:
+        df.to_csv(save_path)
+    return df
+
 
 def parse_xml_to_csv(path, save_path=None):
     """
