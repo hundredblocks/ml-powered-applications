@@ -58,29 +58,6 @@ def get_vectorized_series(text_series, vectorizer):
     return vectorized_series
 
 
-def get_vectorized_representation(text_series, pretrained=False):
-    """
-    Generate a vectorized representation
-    :param text_series: A pandas Series of text data
-    :param pretrained: whether to use a pretrained model or vectorize from scratch
-    :return: the vectorizer and a np array of dimension (len_series, embedding length)
-    """
-    if pretrained:
-        vectorizer = spacy.load(
-            "en_core_web_lg", disable=["parser", "tagger", "ner", "textcat"]
-        )
-        vectors = text_series.apply(lambda x: vectorizer(x).vector)
-
-    else:
-        vectorizer = TfidfVectorizer(
-            strip_accents="ascii", min_df=5, max_df=0.5, max_features=10000
-        )
-        # We make the matrix dense here to then append additional features to it
-        # more easily. This has a negative impact on performance
-        vectors = vectorizer.fit_transform(text_series).toarray()
-    return vectorizer, vectors
-
-
 def add_text_features_to_df(df):
     """
     Ads features to DataFrame
@@ -89,13 +66,6 @@ def add_text_features_to_df(df):
     :return: DataFrame with additional features
     """
     df["full_text"] = df["Title"].str.cat(df["body_text"], sep=" ", na_rep="")
-    # TODO removing, check that this works
-    # vectorizer, vectors = get_vectorized_representation(
-    #     df["full_text"].copy(), pretrained=pretrained_vectors
-    # )
-    # list_vectors = [list(vec) for vec in vectors]
-    # df["vectors"] = list_vectors
-
     df = add_v1_features(df.copy())
 
     return df
@@ -167,7 +137,7 @@ def get_normalized_series(df, col):
     :param col: column name
     :return: normalized series
     """
-    # TODO fix
+    # TODO fix normalization method
     return (df[col] - df[col].mean()) / (df[col].max() - df[col].min())
 
 
