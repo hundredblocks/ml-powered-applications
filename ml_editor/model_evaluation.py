@@ -71,8 +71,6 @@ def get_confusion_matrix_plot(
     plt.ylabel("True label", fontsize=20)
     plt.xlabel("Predicted label", fontsize=20)
 
-    return plt
-
 
 def get_roc_plot(
     predicted_proba_y, true_y, tpr_bar=-1, fpr_bar=-1, figsize=(10, 10)
@@ -150,7 +148,6 @@ def get_roc_plot(
     plt.xlabel("False positive rate", fontsize=20)
     plt.xlim(0, 1)
     plt.ylim(0, 1)
-    return plt
 
 
 def get_calibration_plot(predicted_proba_y, true_y, figsize=(10, 10)):
@@ -206,7 +203,6 @@ def get_calibration_plot(predicted_proba_y, true_y, figsize=(10, 10)):
     ax2.legend(loc="upper center", ncol=2)
 
     plt.tight_layout()
-    return plt
 
 
 def get_metrics(predicted_y, true_y):
