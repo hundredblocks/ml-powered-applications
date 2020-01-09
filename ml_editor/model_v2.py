@@ -143,3 +143,18 @@ def get_question_score_from_input(text):
     preds = get_model_probabilities_for_input_texts([text])
     positive_proba = preds[0][1]
     return positive_proba
+
+
+def get_pos_score_from_text(input_text):
+    preds = get_model_probabilities_for_input_texts([input_text])
+    positive_proba = preds[0][1]
+    output_str = (
+        """
+        Question score (0 is worst, 1 is best): 
+        <br/>
+        %s
+    """
+        % positive_proba
+    )
+
+    return output_str
