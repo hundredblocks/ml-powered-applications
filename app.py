@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from flask import Flask, render_template, request
 
 from ml_editor.ml_editor import get_recommendations_from_input
@@ -31,7 +33,16 @@ def get_model_from_template(template_name):
     return template_name.split(".")[0]
 
 
+@lru_cache(maxsize=128)
 def retrieve_recommendations_for_model(question, model):
+    """
+    This function computes or retrieves recommendations
+    We use an LRU cache to store results we process. If we see the same question
+    twice, we can retrieve cached results to serve them faster
+    :param question: the input text to the model
+    :param model: which model to use
+    :return: a model's recommendations
+    """
     if model == "v1":
         return get_recommendations_from_input(question)
     if model == "v2":

@@ -38,6 +38,11 @@ def run_heuristic(question_len):
 
 @lru_cache(maxsize=128)
 def run_model(question_data):
+    """
+    This is a stub function. We actually use the lru_cache with a purpose
+    in app.py
+    :param question_data:
+    """
     # Insert any slow model inference below
     pass
 
@@ -62,7 +67,7 @@ def verify_output_type_and_range(output):
     if not isinstance(output, float):
         raise ValueError("Wrong output type %s, %s" % (output, type(output)))
     if not 0 < output < 1:
-        raise ValueError("Output out of range %s, %s" % (output))
+        raise ValueError("Output out of range %s, %s" % output)
 
 
 def validate_and_correct_output(question_data, model_output):
