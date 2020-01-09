@@ -16,6 +16,20 @@
 
     <h1>Welcome to the ML Editor!</h1>
     <h2>Version 3: Applied suggestions from an improved model</h2>
+    <p> This version of the ML Editor outputs a question quality score and a set
+        of suggestions. Both the score and the suggestions come from models
+        trained on a dataset of questions from
+        <a href="writers.stackexchange.com">writers.stackexchange.com</a>. The
+        scoring model was trained to predict whether a question would receive
+        more upvotes than average. The explanation model was trained to generate
+        suggestions that are most likely to improve the current estimated score.
+        The questions in the dataset tend to be on the longer side
+        (multiple sentences per question), so the models work best for longer
+        examples.</p>
+    <p>In some cases, following the suggestions will lead to a lower model
+    score. This can be due both to estimation errors from the explanation model,
+    or to other features being affected negatively by the changes. In order to
+    mitigate this, I recommend going through multiple successive attempts.</p>
     <form action="" method="post">
         <div class="form-group">
             <label for="question">Which question would you like to ask?</label>
