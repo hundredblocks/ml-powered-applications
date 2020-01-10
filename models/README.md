@@ -1,1 +1,1 @@
-This folder will contain trained models.
+This folder contains trained models and vectorizers.
