@@ -95,21 +95,21 @@ The notebooks belong to a few categories of concepts, described below.
 - [Third Model][ThirdModel]
 - [Generating Recommendations][GeneratingRecommendations]
 
-[BlackBoxExplainer]: ./black_box_explainer.ipynb
-[ClusteringData]: ./clustering_data.ipynb
-[ComparingDataToPredictions]: ./comparing_data_to_predictions.ipynb
-[ComparingModels]: ./comparing_models.ipynb
-[DatasetExploration]: ./dataset_exploration.ipynb
-[ExploringDataToGenerateFeatures]: ./exploring_data_to_generate_features.ipynb
-[FeatureImportance]: ./feature_importance.ipynb
-[GeneratingRecommendations]: ./generating_recommendations.ipynb
-[SecondModel]: ./second_model.ipynb
-[SplittingData]: ./splitting_data.ipynb
-[TabularDataVectorization]: ./tabular_data_vectorization.ipynb
-[ThirdModel]: ./third_model.ipynb
-[TopK]: ./top_k.ipynb
-[TrainSimpleModel]: ./train_simple_model.ipynb
-[VectorizingText]: ./vectorizing_text.ipynb
+[BlackBoxExplainer]: ./notebooks/black_box_explainer.ipynb
+[ClusteringData]: ./notebooks/clustering_data.ipynb
+[ComparingDataToPredictions]: ./notebooks/comparing_data_to_predictions.ipynb
+[ComparingModels]: ./notebooks/comparing_models.ipynb
+[DatasetExploration]: ./notebooks/dataset_exploration.ipynb
+[ExploringDataToGenerateFeatures]: ./notebooks/exploring_data_to_generate_features.ipynb
+[FeatureImportance]: ./notebooks/feature_importance.ipynb
+[GeneratingRecommendations]: ./notebooks/generating_recommendations.ipynb
+[SecondModel]: ./notebooks/second_model.ipynb
+[SplittingData]: ./notebooks/splitting_data.ipynb
+[TabularDataVectorization]: ./notebooks/tabular_data_vectorization.ipynb
+[ThirdModel]: ./notebooks/third_model.ipynb
+[TopK]: ./notebooks/top_k.ipynb
+[TrainSimpleModel]: ./notebooks/train_simple_model.ipynb
+[VectorizingText]: ./notebooks/vectorizing_text.ipynb
 
 ## Pretrained models
 
