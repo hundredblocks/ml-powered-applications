@@ -41,6 +41,14 @@ Then, install project requirements by using:
 
 `pip install -r requirements.txt`
 
+The library uses a few models from spacy. To download the small and large
+English model (required to run the app and the notebooks), run these commands
+from a terminal with your virtualenv activated:
+
+`python -m spacy download en_core_web_sm`
+
+`python -m spacy download en_core_web_lg`
+
 Finally, the notebooks and library leverage the `nltk` package.
 The package comes with a set of resources that need to be individually downloaded.
 To do so, open a Python session in an activated virtual environment, import
