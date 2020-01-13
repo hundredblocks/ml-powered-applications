@@ -4,7 +4,7 @@
 
 Welcome to the companion code repository for the O'Reilly book
 [Building ML Powered Applications](http://bit.ly/mlpowered-oreilly).
-The book is availble on [Amazon](http://bit.ly/mlpowered).
+The book is available on [Amazon](http://bit.ly/mlpowered).
 
 This repository consists of three parts:
 - A set of Jupyter notebooks in the `notebook` folder serve to illustrate
@@ -19,7 +19,8 @@ case study example, a Machine Learning driven writing assistant.
 
 ### Python environment
 
-This repository has been tested on Python 3.6. It aims to support any Python 3 version.
+This repository has been tested on Python 3.6 and 3.7. It aims to support any
+Python 3 version.
 
 To setup, start by cloning the repository:
 
@@ -39,12 +40,6 @@ You can then activate it by running:
 Then, install project requirements by using:
 
 `pip install -r requirements.txt`
-
-The library uses a few models from spacy. To download the small English model
-(required to run the app), run this command from a terminal with your virtualenv
-activated:
-
-`python -m spacy download en_core_web_sm`
 
 Finally, the notebooks and library leverage the `nltk` package.
 The package comes with a set of resources that need to be individually downloaded.
@@ -99,14 +94,17 @@ The notebooks belong to a few categories of concepts, described below.
 - [Feature Importance][FeatureImportance]
 - [Black Box Explainer][BlackBoxExplainer]
 
-### Model Comparison
+### Improving the Model
 
 - [Second Model][SecondModel]
+- [Third Model][ThirdModel]
+
+### Model Comparison
+
 - [Comparing Models][ComparingModels]
 
 ### Generating Suggestions from Models
 
-- [Third Model][ThirdModel]
 - [Generating Recommendations][GeneratingRecommendations]
 
 [BlackBoxExplainer]: ./notebooks/black_box_explainer.ipynb
@@ -137,13 +135,10 @@ results, as well as in the flask app.
 
 To run the app, simply navigate to the root of the repository and run:
 
-`export FLASK_APP=app.py`
+`FLASK_APP=app.py flask run`
 
-Followed by:
-
-`flask run `
-
-The above command should spin up a local web-app you can access at ` http://127.0.0.1:5000/`
+The above command should spin up a local web-app you can access at
+`http://127.0.0.1:5000/`
 
 ## Troubleshooting
 

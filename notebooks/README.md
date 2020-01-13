@@ -1,14 +1,18 @@
 This folder contains notebooks showcasing concepts covered in the book.
-Most of the examples only use one of the subfolders in archive (the one that contains data for writers.stackexchange.com).
-I've includeda processed version of the data as a `.csv` for convenience.
+Most of the examples only use one of the subfolders in archive
+(the one that contains data for writers.stackexchange.com).
+I've included a processed version of the data as a `.csv` for convenience.
 
-If you wanted to generate this data yourself, or generate it for another subfolder, you should:
+If you want to generate this data yourself, or generate it for another subfolder,
+you should:
 
-- Download a subfolder from the stackoverflow [archives](https://archive.org/details/stackexchange)
+- Download a subfolder from the stackoverflow [archives][archives]
 
 - Run `parse_xml_to_csv` to convert it to a DataFrame
 
 - Run `generate_model_text_features` to generate a DataFrames with precomputed features
+
+[archives]: https://archive.org/details/stackexchange
 
 The notebooks belong to a few categories of concepts, described below.
 
@@ -29,14 +33,17 @@ The notebooks belong to a few categories of concepts, described below.
 - [Feature Importance][FeatureImportance]
 - [Black Box Explainer][BlackBoxExplainer]
 
-### Model Comparison
+### Improve the Model
 
 - [Second Model][SecondModel]
+- [Third Model][ThirdModel]
+
+### Model Comparison
+
 - [Comparing Models][ComparingModels]
 
 ### Generating Suggestions from Models
 
-- [Third Model][ThirdModel]
 - [Generating Recommendations][GeneratingRecommendations]
 
 [BlackBoxExplainer]: ./black_box_explainer.ipynb
