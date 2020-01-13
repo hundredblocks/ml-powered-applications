@@ -15,6 +15,9 @@ case study example, a Machine Learning driven writing assistant.
 
 - A Flask app demonstrates a simple way to serve results to users
 
+Credit and thanks go to [Bruno Guisard](https://www.linkedin.com/in/bruno-guisard/)
+who conducted a thorough review of the code in this repository.
+
 ## Setup instructions
 
 ### Python environment
