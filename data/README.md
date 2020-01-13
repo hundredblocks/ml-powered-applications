@@ -1,3 +1,4 @@
-This folder is where you should download stackoverflow archives.
+This folder is where you should download stackoverflow archives and keep your
+transformed data if you choose to do these steps on your own.
 
-It will also contain transformed data.
+I have provided a version of the preprocessed data for convenience.
