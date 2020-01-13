@@ -1,6 +1,7 @@
 This folder contains notebooks showcasing concepts covered in the book.
 Most of the examples only use one of the subfolders in archive
 (the one that contains data for writers.stackexchange.com).
+
 I've included a processed version of the data as a `.csv` for convenience.
 
 If you want to generate this data yourself, or generate it for another subfolder,
@@ -33,7 +34,7 @@ The notebooks belong to a few categories of concepts, described below.
 - [Feature Importance][FeatureImportance]
 - [Black Box Explainer][BlackBoxExplainer]
 
-### Improve the Model
+### Improving the Model
 
 - [Second Model][SecondModel]
 - [Third Model][ThirdModel]
