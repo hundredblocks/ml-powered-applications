@@ -50,8 +50,6 @@ Here is an example of how to do this for the `punkt` package from an active vier
 
 `nltk.download('punkt')`
 
-### Downloading required data
-
 ## Notebook examples
 
 The notebook folder contains usage examples for concepts covered in the book.
