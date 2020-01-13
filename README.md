@@ -47,7 +47,7 @@ To do so, open a Python session in an activated virtual environment, import
 `nltk`, and download the required resource.
 
 Here is an example of how to do this for the `punkt` package from an active
-virutal environment with `nltk` installed:
+virtual environment with `nltk` installed:
 
 `python`
 
