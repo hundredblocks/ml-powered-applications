@@ -2,12 +2,17 @@
 
 ![Book cover](/images/ML_Powered_cover.jpg)
 
-Welcome to the companion code repository for the O'Reilly book [Building ML Powered Applications](http://bit.ly/mlpowered-oreilly).
+Welcome to the companion code repository for the O'Reilly book
+[Building ML Powered Applications](http://bit.ly/mlpowered-oreilly).
 The book is availble on [Amazon](http://bit.ly/mlpowered).
 
-This repositoryconsists of three parts:
-- A set of Jupyter notebooks in the `notebook` folder serve to illustrate concepts covered in the book.
-- A library in the `ml_editor` folder contains core functions for the book's case study example, a Machine Learning driven writing assistant.
+This repository consists of three parts:
+- A set of Jupyter notebooks in the `notebook` folder serve to illustrate
+concepts covered in the book.
+
+- A library in the `ml_editor` folder contains core functions for the book's
+case study example, a Machine Learning driven writing assistant.
+
 - A Flask app demonstrates a simple way to serve results to users
 
 ## Setup instructions
@@ -20,7 +25,8 @@ To setup, start by cloning the repository:
 
 `git clone https://github.com/hundredblocks/ml-powered-applications.git`
 
-Then, navigate to the repository and create a python virtual environment using [virtualenv](https://pypi.org/project/virtualenv/):
+Then, navigate to the repository and create a python virtual environment using
+[virtualenv](https://pypi.org/project/virtualenv/):
 
 `cd ml-powered-applications`
 
@@ -34,15 +40,19 @@ Then, install project requirements by using:
 
 `pip install -r requirements.txt`
 
-The library uses a few models from spacy. To download the small English model (required to run the app), run this command from a terminal with your virtualenv activated:
+The library uses a few models from spacy. To download the small English model
+(required to run the app), run this command from a terminal with your virtualenv
+activated:
 
 `python -m spacy download en_core_web_sm`
 
 Finally, the notebooks and library leverage the `nltk` package.
 The package comes with a set of resources that need to be individually downloaded.
-To do so, open a Python session in an activated virtual environment, import `nltk`, and download the required resource.
+To do so, open a Python session in an activated virtual environment, import
+`nltk`, and download the required resource.
 
-Here is an example of how to do this for the `punkt` package from an active vierutalenvironment with `nltk` installed:
+Here is an example of how to do this for the `punkt` package from an active
+virutal environment with `nltk` installed:
 
 `python`
 
@@ -53,16 +63,22 @@ Here is an example of how to do this for the `punkt` package from an active vier
 ## Notebook examples
 
 The notebook folder contains usage examples for concepts covered in the book.
-Most of the examples only use one of the subfolders in archive (the one that contains data for writers.stackexchange.com).
-I've includeda processed version of the data as a `.csv` for convenience.
+Most of the examples only use one of the subfolders in archive (the one that
+contains data for writers.stackexchange.com).
 
-If you wanted to generate this data yourself, or generate it for another subfolder, you should:
+I've included a processed version of the data as a `.csv` for convenience.
 
-- Download a subfolder from the stackoverflow [archives](https://archive.org/details/stackexchange)
+If you wanted to generate this data yourself, or generate it for another subfolder,
+you should:
+
+- Download a subfolder from the stackoverflow [archives][archives]
 
 - Run `parse_xml_to_csv` to convert it to a DataFrame
 
-- Run `generate_model_text_features` to generate a DataFrames with precomputed features
+- Run `generate_model_text_features` to generate a DataFrames with precomputed
+features
+
+[archives]: https://archive.org/details/stackexchange
 
 The notebooks belong to a few categories of concepts, described below.
 
@@ -112,8 +128,10 @@ The notebooks belong to a few categories of concepts, described below.
 ## Pretrained models
 
 You can train and save models using the notebooks in the `notebook` folder.
-For convenience, I've included three trained models and two vectorizers, serialized in the `models` folder.
-These models are loaded by notebooks demonstrating methods to compare model results, as well as in the flask app.
+For convenience, I've included three trained models and two vectorizers,
+serialized in the `models` folder.
+These models are loaded by notebooks demonstrating methods to compare model
+results, as well as in the flask app.
 
 ## Running the prototype Flask app
 
@@ -129,7 +147,8 @@ The above command should spin up a local web-app you can access at ` http://127.
 
 ## Troubleshooting
 
-If you have any questions or encounter any roadblocks, please feel free to open an issue or email me at mlpoweredapplications@gmail.com.
+If you have any questions or encounter any roadblocks, please feel free to open
+an issue or email me at mlpoweredapplications@gmail.com.
 
 
 Project structure inspired by the great [Cookiecutter Data Science](https://drivendata.github.io/cookiecutter-data-science/).
