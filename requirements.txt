@@ -1,6 +1,10 @@
 beautifulsoup4==4.7.1
 bokeh==1.1.0
 Flask==1.1.1
+jupyter==1.0.0
+jupyter-client==5.2.4
+jupyter-console==6.0.0
+jupyter-core==4.4.0
 Keras==2.2.4
 lime==0.1.1.34
 matplotlib==3.0.3
