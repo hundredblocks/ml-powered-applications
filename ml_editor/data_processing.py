@@ -51,6 +51,12 @@ def train_vectorizer(df):
 
 
 def get_vectorized_series(text_series, vectorizer):
+    """
+    Vectorizes an input series using a pre-trained vectorizer
+    :param text_series: pandas Series of text
+    :param vectorizer: pretrained sklearn vectorizer
+    :return: array of vectorized features
+    """
     vectors = vectorizer.transform(text_series)
     vectorized_series = [vectors[i] for i in range(vectors.shape[0])]
     return vectorized_series
@@ -133,10 +139,9 @@ def get_normalized_series(df, col):
     Get a normalized version of a column
     :param df: DataFrame
     :param col: column name
-    :return: normalized series
+    :return: normalized series using Z-score
     """
-    # TODO fix normalization method
-    return (df[col] - df[col].mean()) / (df[col].max() - df[col].min())
+    return (df[col] - df[col].mean()) / df[col].std()
 
 
 def get_random_train_test_split(posts, test_size=0.3, random_state=40):

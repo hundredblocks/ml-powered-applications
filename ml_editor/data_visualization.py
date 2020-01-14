@@ -3,6 +3,11 @@ from matplotlib.patches import Rectangle
 
 
 def plot_embeddings(embeddings, sent_labels):
+    """
+    Plot embeddings, colored by sentence label
+    :param embeddings: two dimensional embeddings
+    :param sent_labels: labels to display
+    """
     fig = plt.figure(figsize=(16, 10))
     color_map = {True: "#1f77b4", False: "#ff7f0e"}
     plt.scatter(
