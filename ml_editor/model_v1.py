@@ -23,6 +23,13 @@ MODEL = joblib.load(curr_path / model_path)
 
 
 def get_model_probabilities_for_input_texts(text_array):
+    """
+    Returns an array of probability scores representing
+    the likelihood of a question receiving a high score
+    format is: [ [prob_low_score1, prob_high_score_1], ... ]
+    :param text_array: array of questions to be scored
+    :return: array of predicted probabilities
+    """
     global FEATURE_ARR, VECTORIZER, MODEL
     vectors = VECTORIZER.transform(text_array)
     text_ser = pd.DataFrame(text_array, columns=["full_text"])
@@ -34,6 +41,13 @@ def get_model_probabilities_for_input_texts(text_array):
 
 
 def get_model_predictions_for_input_texts(text_array):
+    """
+    Returns an array of labels for a given array of questions
+    True represents high scores, False low scores
+    format is: [ False, True, ...]
+    :param text_array:  array of questions to be classified
+    :return: array of classes
+    """
     probs = get_model_probabilities_for_input_texts(text_array)
     predicted_classes = probs[:, 0] < probs[:, 1]
     return predicted_classes

@@ -77,6 +77,11 @@ FEATURE_ARR.extend(POS_NAMES.keys())
 
 
 def get_explainer():
+    """
+    Prepare LIME explainer using our training data. This is fast enough that
+    we do not bother with serializing it
+    :return: LIME explainer object
+    """
     curr_path = Path(os.path.dirname(__file__))
     data_path = Path("../data/writers_with_features.csv")
     df = pd.read_csv(curr_path / data_path)
@@ -93,6 +98,11 @@ EXPLAINER = get_explainer()
 
 
 def simplify_order_sign(order_sign):
+    """
+    Simplify signs to make display clearer for users
+    :param order_sign: Input comparison operator
+    :return: Simplifier operator
+    """
     if order_sign in ["<=", "<"]:
         return "<"
     if order_sign in [">=", ">"]:
@@ -101,6 +111,12 @@ def simplify_order_sign(order_sign):
 
 
 def get_recommended_modification(simple_order, impact):
+    """
+    Generate a recommendation string from an operator and the type of impact
+    :param simple_order: simplified operator
+    :param impact: whether the change has positive or negative impact
+    :return: formatted recommendation string
+    """
     bigger_than_threshold = simple_order == ">"
     has_positive_impact = impact > 0
 
@@ -115,6 +131,11 @@ def get_recommended_modification(simple_order, impact):
 
 
 def parse_explanations(exp_list):
+    """
+    Parse explanations returned by LIME into a user readable format
+    :param exp_list: explanations returned by LIME explainer
+    :return: array of dictionaries containing user facing strings
+    """
     parsed_exps = []
     for feat_bound, impact in exp_list:
         conditions = feat_bound.split(" ")
@@ -141,6 +162,11 @@ def parse_explanations(exp_list):
 
 
 def get_recommendation_string_from_parsed_exps(exp_list):
+    """
+    Generate recommendation text we can display on a flask app
+    :param exp_list: array of dictionaries containing explanations
+    :return: HTML displayable recommendation text
+    """
     recommendations = []
     for i, feature_exp in enumerate(exp_list):
         recommendation = "%s %s" % (

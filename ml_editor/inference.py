@@ -1,3 +1,7 @@
+"""inference.py: This module contains function stubs serving as book examples.
+The functions are not used for the ml_editor app or notebook
+"""
+
 from functools import lru_cache
 
 REQUIRED_FEATURES = [

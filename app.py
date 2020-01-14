@@ -11,25 +11,42 @@ app = Flask(__name__)
 
 @app.route("/")
 def landing_page():
+    """
+    Renders landing page
+    """
     return render_template("landing.html")
 
 
 @app.route("/v1", methods=["POST", "GET"])
 def v1():
+    """
+    Renders v1 model input form and results
+    """
     return handle_text_request(request, "v1.html")
 
 
 @app.route("/v2", methods=["POST", "GET"])
 def v2():
+    """
+        Renders v2 model input form and results
+        """
     return handle_text_request(request, "v2.html")
 
 
 @app.route("/v3", methods=["POST", "GET"])
 def v3():
+    """
+        Renders v3 model input form and results
+    """
     return handle_text_request(request, "v3.html")
 
 
 def get_model_from_template(template_name):
+    """
+    Get the name of the relevant model from the name of the template
+    :param template_name: name of html template
+    :return: name of the model
+    """
     return template_name.split(".")[0]
 
 
@@ -53,6 +70,13 @@ def retrieve_recommendations_for_model(question, model):
 
 
 def handle_text_request(request, template_name):
+    """
+    Renders an input form for GET requests and displays results for the given
+    posted question for a POST request
+    :param request: http request
+    :param template_name: name of the requested template (e.g. v2.html)
+    :return: Render an input form or results depending on request type
+    """
     if request.method == "POST":
         question = request.form.get("question")
         model_name = get_model_from_template(template_name)

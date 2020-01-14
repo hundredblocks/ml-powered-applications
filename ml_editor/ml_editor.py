@@ -17,7 +17,7 @@ logger.addHandler(console_out)
 
 def parse_arguments():
     """
-
+    Simple argument parser for the command line
     :return: The text to be edited
     """
     parser = argparse.ArgumentParser(description="Receive text to be edited")
@@ -28,7 +28,7 @@ def parse_arguments():
 
 def clean_input(text):
     """
-
+    Text sanitization function
     :param text: User input text
     :return: Sanitized text, without non ascii characters
     """
@@ -38,7 +38,7 @@ def clean_input(text):
 
 def preprocess_input(text):
     """
-
+    Tokenizes text that has been sainitized
     :param text: Sanitized text
     :return: Text ready to be fed to analysis, by having sentences and words tokenized
     """
@@ -49,7 +49,7 @@ def preprocess_input(text):
 
 def compute_flesch_reading_ease(total_syllables, total_words, total_sentences):
     """
-
+    Computes readability score from summary statistics
     :param total_syllables: number of syllables in input text
     :param total_words: number of words in input text
     :param total_sentences: number of sentences in input text
@@ -64,7 +64,7 @@ def compute_flesch_reading_ease(total_syllables, total_words, total_sentences):
 
 def get_reading_level_from_flesch(flesch_score):
     """
-    Correspondance taken from https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
+    Thresholds taken from https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
     :param flesch_score:
     :return: A reading level and difficulty for a given flesch score
     """
@@ -86,7 +86,7 @@ def get_reading_level_from_flesch(flesch_score):
 
 def compute_average_word_length(tokens):
     """
-
+    Calculate word length for a sentence
     :param tokens: a list of words
     :return: The average length of words in this list
     """
@@ -96,7 +96,7 @@ def compute_average_word_length(tokens):
 
 def compute_total_average_word_length(sentence_list):
     """
-
+    Calculate average word length for multiple sentences
     :param sentence_list: a list of sentences, each being a list of words
     :return: The average length of words in this list of sentences
     """
@@ -106,7 +106,7 @@ def compute_total_average_word_length(sentence_list):
 
 def compute_total_unique_words_fraction(sentence_list):
     """
-
+    Compute fraction os unique words
     :param sentence_list: a list of sentences, each being a list of words
     :return: the fraction of unique words in the sentences
     """
@@ -117,7 +117,7 @@ def compute_total_unique_words_fraction(sentence_list):
 
 def count_word_usage(tokens, word_list):
     """
-
+    Counts occurrences of a given list of words
     :param tokens: a list of tokens for one sentence
     :param word_list: a list of words to search for
     :return: the number of times the words appear in the list
@@ -127,7 +127,7 @@ def count_word_usage(tokens, word_list):
 
 def count_word_syllables(word):
     """
-
+    Count syllables in a word
     :param word: a one word string
     :return: the number of syllables according to pyphen
     """
@@ -139,7 +139,7 @@ def count_word_syllables(word):
 
 def count_sentence_syllables(tokens):
     """
-
+    Count syllables in a sentence
     :param tokens: a list of words and potentially punctuation
     :return: the number of syllables in the sentence
     """
@@ -156,7 +156,7 @@ def count_sentence_syllables(tokens):
 
 def count_total_syllables(sentence_list):
     """
-
+    Count syllables in a list of sentences
     :param sentence_list:  a list of sentences, each being a list of words
     :return: the number of syllables in the sentences
     """
@@ -167,7 +167,7 @@ def count_total_syllables(sentence_list):
 
 def count_words_per_sentence(sentence_tokens):
     """
-
+    Count words in a sentence
     :param sentence_tokens: a list of words and potentially punctuation
     :return: the number of words in the sentence
     """
@@ -177,7 +177,7 @@ def count_words_per_sentence(sentence_tokens):
 
 def count_total_words(sentence_list):
     """
-
+    Count words in a list of sentences
     :param sentence_list: a list of sentences, each being a list of words
     :return: the number of words in the sentences
     """
@@ -261,20 +261,12 @@ def get_suggestions(sentence_list):
     return result_str
 
 
-def display_recommendations(sentence_list):
-    print(colored("hello", "red"), "dddd")
-    but_and = [token for token in sentence_list if token in ["but", "and"]]
-    out = []
-    for sentence in sentence_list:
-        for token in sentence:
-            word_color = token
-            if token in ["but", "and"]:
-                word_color = colored(word_color, "red")
-            out.append(word_color)
-    print(" ".join(out))
-
-
 def get_recommendations_from_input(txt):
+    """
+    Cleans, preprocesses, and generates heuristic suggestion for input string
+    :param txt: Input text
+    :return: Suggestions for a given text input
+    """
     processed = clean_input(txt)
     tokenized_sentences = preprocess_input(processed)
     suggestions = get_suggestions(tokenized_sentences)
