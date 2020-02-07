@@ -4,7 +4,6 @@ import sys
 
 import pyphen
 import nltk
-from termcolor import colored
 
 pyphen.language_fallback("en_US")
 
