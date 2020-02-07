@@ -5,10 +5,10 @@ from keras_preprocessing.text import Tokenizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.layers import Embedding
-from keras.layers import LSTM
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Embedding
+from tensorflow.keras.layers import LSTM
 
 text_input = [
     "Test sentence one",
