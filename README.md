@@ -15,6 +15,9 @@ case study example, a Machine Learning driven writing assistant.
 
 - A Flask app demonstrates a simple way to serve results to users
 
+- The `images/bmlpa_figures` folder contains reproductions of a few figures 
+which were hard to read in the first print version.
+
 Credit and thanks go to [Bruno Guisard](https://www.linkedin.com/in/bruno-guisard/)
 who conducted a thorough review of the code in this repository.
 
