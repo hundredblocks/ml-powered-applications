@@ -1,6 +1,6 @@
 beautifulsoup4==4.7.1
 bokeh==1.1.0
-Flask==1.1.1
+Flask==2.3.2
 jupyter==1.0.0
 jupyter-client==5.3.4
 jupyter-console==6.0.0
